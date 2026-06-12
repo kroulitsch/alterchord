@@ -2,28 +2,6 @@
 #include <stdlib.h>
 
 /**
- * @brief This function is used to create a `String` with a given `id` and `tone`
- * @param id ID of the string
- * @param tone Tuning of the string
- * @returns Pointer to a created string
- */
-String *createString(int id, Tone tone) {
-    String *s = malloc(sizeof(String));
-    s->id = id;
-    s->tuning = tone;
-
-    return s;
-}
-
-/**
- * @brief This function correctly frees the string
- * @param s String to be freed
- */
-void freeString(String *s) {
-    free(s);
-}
-
-/**
  * @brief This function is used to create a `Tuning` with a given `stringCount` and `tuning`
  * @param stringCount number of strings to use
  * @param tuning Tuning of each string
@@ -32,10 +10,11 @@ void freeString(String *s) {
 Tuning *createTuning(int stringCount, Tone *tuning) {
     Tuning *t = malloc(sizeof(Tuning));
     t->stringCount = stringCount;
-    t->strings = malloc(stringCount * sizeof(String *));
+    t->strings = malloc(stringCount * sizeof(String));
 
     for(int i = 0; i < stringCount; i++) {
-        t->strings[i] = createString(i, tuning[i]);
+        t->strings[i].id = i;
+        t->strings[i].tuning = tuning[i];
     }
 
     return t;
@@ -46,10 +25,32 @@ Tuning *createTuning(int stringCount, Tone *tuning) {
  * @param s Tuning to be freed
  */
 void freeTuning(Tuning *t) {
-    for(int i = 0; i < t->stringCount; i++) {
-        freeString(t->strings[i]);
-    }
     free(t->strings);
 
     free(t);
+}
+
+/**
+ * @brief This function creates a chord type, assigns its kind and the intervals composing the chord
+ * @param kind Kind of the chord
+ * @param intervalCount Number of different intervals
+ * @param intervals Number array of distances from the root note
+ */
+ChordType createChordType(ChordKind kind, int intervalCount, int *intervals) {
+    ChordType type;
+    type.kind = kind;
+    type.intervalCount = intervalCount;
+    for (int i = 0; i < intervalCount && i < MAX_CHORD_INTERVALS; i++) {
+        type.intervals[i] = intervals[i];
+    }
+
+    return type;
+}
+
+Chord createChord(Tone root, ChordKind kind) {
+    Chord chord;
+    chord.kind = kind;
+    chord.root = root;
+
+    return chord;
 }

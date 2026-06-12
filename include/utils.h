@@ -8,8 +8,15 @@ typedef struct string_t {
     Tone tuning;
 } String;
 
-typedef struct guitar_t {
+typedef struct tuning_t {
+    int stringCount;
     String **strings;
-} Guitar;
+} Tuning;
+
+String *createString(int id, Tone tone);
+void freeString(String *s);
+
+Tuning *createTuning(int stringCount, Tone *tuning);
+void freeTuning(Tuning *t);
 
 #endif

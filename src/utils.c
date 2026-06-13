@@ -139,6 +139,9 @@ Tone strToTone(char *str) {
 
 char *chordToStr(Chord c, char *buff) {
     buff[0] = '\0';
+    if(c.tonesCount == 0) {
+        strcat(buff, "(No chord)");
+    }
 
     for(int i = 0; i < c.tonesCount; i++) {
         strcat(buff, toneToStr(c.tones[i]));

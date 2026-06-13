@@ -7,7 +7,7 @@ int main() {
     Tuning t = createTuning(6, tones);
 
     for(int i = 0; i < t.stringCount; i++) {
-        printf("%d ", t.strings[i].tuning);
+        printf("%s ", toneToStr(t.strings[i].tuning));
     }
     printf("\n");
 

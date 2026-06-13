@@ -1,5 +1,8 @@
 #include "utils.h"
 #include <stdlib.h>
+#include <string.h>
+
+char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};;
 
 /**
  * @brief This function is used to create a `Tuning` with a given `stringCount` and `tuning`
@@ -39,7 +42,7 @@ ChordType createChordType(ChordKind kind, int intervalCount, int *intervals) {
     ChordType type;
     type.kind = kind;
     type.intervalCount = intervalCount;
-    for (int i = 0; i < intervalCount && i < MAX_CHORD_INTERVALS; i++) {
+    for (int i = 0; i < intervalCount; i++) {
         type.intervals[i] = intervals[i];
     }
 
@@ -58,4 +61,31 @@ Chord createChord(Tone root, ChordKind kind) {
     chord.root = root;
 
     return chord;
+}
+
+/**
+ * @brief This function converts `Tone` instance to a human readable string
+ * @param t Tone to be converted
+ */
+char *toneToStr(Tone t) {
+    if(t == NO_TONE) {
+        return "NO NOTE";
+    }
+    return toneNames[t];
+}
+
+/**
+ * @brief This function converts string tone name to a `Tone` instance
+ * @param str String to be converted
+ */
+Tone strToTone(char *str) {
+    for(int i = 0; i < TONES_COUNT; i++) {
+        if(strcmp(toneNames[i], str) == 0) {
+            return (Tone)i;
+        } else if(str[1] == 'b' && toneNames[i][0] == str[0]) {
+            return (Tone)((i - 1 + TONES_COUNT) % TONES_COUNT);
+        }
+    }
+
+    return NO_TONE;
 }

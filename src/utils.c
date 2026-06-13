@@ -1,7 +1,8 @@
 #include "utils.h"
 #include "basics.h"
 
-char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};;
+char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+char *chordKindNames[CHORD_KIND_SIZE] = {"(No chord kind)", "maj", "min", "dim", "aug", "maj7", "min7", "sus2", "sus4"};
 
 /**
  * @brief This function is used to create a `Tuning` with a given `stringCount` and `tuning`
@@ -42,8 +43,8 @@ Tuning createTuning(int stringCount, char *tuning) {
 
 
 /**
- * @brief This function correctly frees the tuning
- * @param s Tuning to be freed
+ * @brief This function correctly frees the tuning allocated resources
+ * @param t Tuning to be freed
  */
 void freeTuning(Tuning t) {
     free(t.strings);
@@ -84,16 +85,27 @@ ChordType getChordType(ChordKind kind) {
 
 /**
  * @brief This function creates a chord based on the `root` note and chord `kind`
- * @example createChord(F, MAJ7) creates a Fmaj7 chord
- * @param root Root note of the chord
- * @param kind Chord kind
+ * @example createChord("Fmaj7") creates a Fmaj7 chord
+ * @param name Name of the chord, for example "Fmaj7"
  * @returns Created chord
  */
-Chord createChord(Tone root, ChordKind kind) {
+Chord createChord(char *name) {
     Chord chord;
-    chord.kind = kind;
-    chord.root = root;
-    chord.type = getChordType(kind);
+
+    int strLen = strlen(name);
+    char rootStr[3];
+    int rootLen = 1;
+    rootStr[0] = name[0];
+    rootStr[1] = '\0';
+    if(strLen > 1 && (name[1] == '#' || name[1] == 'b')) {
+        rootStr[1] = name[1];
+        rootLen++;
+    }
+    rootStr[2] = '\0';
+    chord.root = strToTone(rootStr);
+
+    chord.kind = strToChordKind(&(name[rootLen]));
+    chord.type = getChordType(chord.kind);
     chord.tonesCount = chord.type.intervalCount;
 
     for(int i = 0; i < chord.tonesCount; i++) {
@@ -104,7 +116,7 @@ Chord createChord(Tone root, ChordKind kind) {
 }
 
 /**
- * @brief This function converts `Tone` instance to a human readable string
+ * @brief This function converts `Tone` instance to a readable string
  * @param t Tone to be converted
  * @returns Converted string
  */
@@ -137,6 +149,12 @@ Tone strToTone(char *str) {
     return NO_TONE;
 }
 
+/**
+ * @brief This function converts chord to a readable string into a provided buffer
+ * @param c Chord to be converted
+ * @param buff Buffer to be used
+ * @returns Buffer with the chord string
+ */
 char *chordToStr(Chord c, char *buff) {
     buff[0] = '\0';
     if(c.tonesCount == 0) {
@@ -151,4 +169,22 @@ char *chordToStr(Chord c, char *buff) {
     }
 
     return buff;
+}
+
+/**
+ * @brief This function converts string chord kind to a `ChordKind` instance
+ * @param str String to be converted
+ * @returns Converted chord kind
+ */
+ChordKind strToChordKind(char *str) {
+    if(strcmp("(No chord kind)", str) == 0) {
+        return NO_CHORD_KIND;
+    }
+    for(int i = 0; i < CHORD_KIND_SIZE; i++) {
+        if(strcmp(chordKindNames[i], str) == 0) {
+            return (ChordKind)i;
+        }
+    }
+
+    return NO_CHORD_KIND;
 }

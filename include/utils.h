@@ -10,6 +10,7 @@ typedef enum {C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, NO_TONE} Tone;
 extern char *toneNames[TONES_COUNT];
 
 typedef enum {NO_CHORD_KIND, MAJ, MIN, DIM, AUG, MAJ7, MIN7, SUS2, SUS4, CHORD_KIND_SIZE} ChordKind;
+extern char *chordKindNames[CHORD_KIND_SIZE];
 
 typedef struct string_t {
     int id;
@@ -40,10 +41,11 @@ void freeTuning(Tuning t);
 
 ChordType createChordType(ChordKind kind, int intervalCount, int *intervals);
 ChordType getChordType(ChordKind kind);
-Chord createChord(Tone root, ChordKind kind);
+Chord createChord(char *name);
 
 char *toneToStr(Tone t);
 Tone strToTone(char *str);
 char *chordToStr(Chord c, char *buff);
+ChordKind strToChordKind(char *str);
 
 #endif

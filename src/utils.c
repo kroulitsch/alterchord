@@ -17,6 +17,7 @@ Tuning createTuning(int stringCount, char *tuning) {
 
     for(int i = 0; i < stringCount; i++) {
         t.strings[i].id = i;
+        t.strings[i].tuning = NO_TONE;
     }
 
     int index = 0;
@@ -84,7 +85,7 @@ Chord createChord(Tone root, ChordKind kind) {
  */
 char *toneToStr(Tone t) {
     if(t == NO_TONE) {
-        return "NO TONE";
+        return "(No tone)";
     }
     return toneNames[t];
 }
@@ -94,7 +95,7 @@ char *toneToStr(Tone t) {
  * @param str String to be converted
  */
 Tone strToTone(char *str) {
-    if(strcmp("NO TONE", str) == 0) {
+    if(strcmp("(No tone)", str) == 0) {
         return NO_TONE;
     }
     for(int i = 0; i < TONES_COUNT; i++) {

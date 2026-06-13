@@ -9,7 +9,7 @@ int main() {
     }
     printf("\n");
 
-    Chord cmaj7 = createChord("Cmaj");
+    Chord cmaj7 = createChord("Abaug");
     char buff[TONES_COUNT];
     printf("%s\n", chordToStr(cmaj7, buff));
     freeTuning(t);

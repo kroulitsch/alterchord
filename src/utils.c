@@ -116,6 +116,13 @@ Chord createChord(char *name) {
 }
 
 /**
+ * @brief This function correctly frees shape's allocated resources
+ */
+void freeShape(Shape s) {
+    free(s.frets);
+}
+
+/**
  * @brief This function converts `Tone` instance to a readable string
  * @param t Tone to be converted
  * @returns Converted string

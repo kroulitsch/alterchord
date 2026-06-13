@@ -5,6 +5,7 @@
 #include <string.h>
 
 #define TONES_COUNT 12
+#define MAX_FRET 30
 
 typedef enum {C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, NO_TONE} Tone;
 extern char *toneNames[TONES_COUNT];
@@ -20,6 +21,7 @@ typedef struct string_t {
 typedef struct tuning_t {
     int stringCount;
     String *strings;
+    int fretCount;
 } Tuning;
 
 typedef struct chord_type_t {
@@ -36,12 +38,20 @@ typedef struct chord_t {
     Tone tones[TONES_COUNT];
 } Chord;
 
+typedef struct shape_t {
+    Tuning tuning;
+    Chord chord;
+    int *frets;
+} Shape;
+
 Tuning createTuning(int stringCount, char *tuning);
 void freeTuning(Tuning t);
 
 ChordType createChordType(ChordKind kind, int intervalCount, int *intervals);
 ChordType getChordType(ChordKind kind);
 Chord createChord(char *name);
+
+void freeShape(Shape s);
 
 char *toneToStr(Tone t);
 Tone strToTone(char *str);

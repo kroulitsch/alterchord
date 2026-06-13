@@ -3,6 +3,7 @@
 ChordType basics_arr[CHORD_KIND_SIZE];
 
 void generateBasics() {
+    basics_arr[NO_CHORD_KIND] = createChordType(NO_CHORD_KIND, 0, NULL);
     basics_arr[MAJ] = createChordType(MAJ, 3, (int[]){0, 4, 7});
     basics_arr[MIN] = createChordType(MIN, 3, (int[]){0, 3, 7});
     basics_arr[DIM] = createChordType(DIM, 3, (int[]){0, 3, 6});

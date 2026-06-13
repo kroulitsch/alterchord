@@ -1,6 +1,5 @@
 #include "utils.h"
-#include <stdlib.h>
-#include <string.h>
+#include "basics.h"
 
 char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};;
 
@@ -8,7 +7,7 @@ char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#",
  * @brief This function is used to create a `Tuning` with a given `stringCount` and `tuning`
  * @param stringCount number of strings to use
  * @param tuning Tuning of each string
- * @returns Pointer to a created string
+ * @returns Created tuning
  */
 Tuning createTuning(int stringCount, char *tuning) {
     Tuning t;
@@ -36,6 +35,8 @@ Tuning createTuning(int stringCount, char *tuning) {
         t.strings[index++].tuning = strToTone(tone);
     }
 
+    generateBasics();
+
     return t;
 }
 
@@ -53,6 +54,7 @@ void freeTuning(Tuning t) {
  * @param kind Kind of the chord
  * @param intervalCount Number of different intervals
  * @param intervals Number array of distances from the root note
+ * @returns Created chord type
  */
 ChordType createChordType(ChordKind kind, int intervalCount, int *intervals) {
     ChordType type;
@@ -66,15 +68,37 @@ ChordType createChordType(ChordKind kind, int intervalCount, int *intervals) {
 }
 
 /**
+ * @brief This function is used to get a chord type based on its `kind`
+ * @param kind Chord kind
+ * @returns Correspondent chord type
+ */
+ChordType getChordType(ChordKind kind) {
+    for(int i = 1; i < CHORD_KIND_SIZE; i++) {
+        if(basics_arr[i].kind == kind) {
+            return basics_arr[i];
+        }
+    }
+
+    return basics_arr[NO_CHORD_KIND];
+}
+
+/**
  * @brief This function creates a chord based on the `root` note and chord `kind`
  * @example createChord(F, MAJ7) creates a Fmaj7 chord
  * @param root Root note of the chord
  * @param kind Chord kind
+ * @returns Created chord
  */
 Chord createChord(Tone root, ChordKind kind) {
     Chord chord;
     chord.kind = kind;
     chord.root = root;
+    chord.type = getChordType(kind);
+    chord.tonesCount = chord.type.intervalCount;
+
+    for(int i = 0; i < chord.tonesCount; i++) {
+        chord.tones[i] = (Tone)((chord.root + chord.type.intervals[i]) % TONES_COUNT);
+    }
 
     return chord;
 }
@@ -82,6 +106,7 @@ Chord createChord(Tone root, ChordKind kind) {
 /**
  * @brief This function converts `Tone` instance to a human readable string
  * @param t Tone to be converted
+ * @returns Converted string
  */
 char *toneToStr(Tone t) {
     if(t == NO_TONE) {
@@ -93,6 +118,7 @@ char *toneToStr(Tone t) {
 /**
  * @brief This function converts string tone name to a `Tone` instance
  * @param str String to be converted
+ * @returns Converted tone
  */
 Tone strToTone(char *str) {
     if(strcmp("(No tone)", str) == 0) {
@@ -109,4 +135,17 @@ Tone strToTone(char *str) {
     }
 
     return NO_TONE;
+}
+
+char *chordToStr(Chord c, char *buff) {
+    buff[0] = '\0';
+
+    for(int i = 0; i < c.tonesCount; i++) {
+        strcat(buff, toneToStr(c.tones[i]));
+        if (i < c.tonesCount - 1) {
+            strcat(buff, " ");
+        }
+    }
+
+    return buff;
 }

@@ -1,6 +1,5 @@
 #include "alterchord.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int main() {
     Tuning t = createTuning(6, "FACGCE");
@@ -11,6 +10,8 @@ int main() {
     printf("\n");
 
     Chord cmaj7 = createChord(C, MAJ7);
+    char buff[TONES_COUNT];
+    printf("%s\n", chordToStr(cmaj7, buff));
     freeTuning(t);
     return 0;
 }

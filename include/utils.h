@@ -28,11 +28,10 @@ typedef struct chord_t {
     ChordKind kind;
 } Chord;
 
-Tuning *createTuning(int stringCount, Tone *tuning);
-void freeTuning(Tuning *t);
+Tuning createTuning(int stringCount, Tone *tuning);
+void freeTuning(Tuning t);
 
 ChordType createChordType(ChordKind kind, int intervalCount, int *intervals);
-
 Chord createChord(Tone root, ChordKind kind);
 
 #endif

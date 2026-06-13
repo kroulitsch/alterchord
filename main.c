@@ -4,10 +4,10 @@
 
 int main() {
     Tone tones[6] = {F, A, G, C, G, E};
-    Tuning *t = createTuning(6, tones);
+    Tuning t = createTuning(6, tones);
 
-    for(int i = 0; i < t->stringCount; i++) {
-        printf("%d ", t->strings[i].tuning);
+    for(int i = 0; i < t.stringCount; i++) {
+        printf("%d ", t.strings[i].tuning);
     }
     printf("\n");
 

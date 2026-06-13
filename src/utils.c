@@ -7,27 +7,26 @@
  * @param tuning Tuning of each string
  * @returns Pointer to a created string
  */
-Tuning *createTuning(int stringCount, Tone *tuning) {
-    Tuning *t = malloc(sizeof(Tuning));
-    t->stringCount = stringCount;
-    t->strings = malloc(stringCount * sizeof(String));
+Tuning createTuning(int stringCount, Tone *tuning) {
+    Tuning t;
+    t.stringCount = stringCount;
+    t.strings = malloc(stringCount * sizeof(String));
 
     for(int i = 0; i < stringCount; i++) {
-        t->strings[i].id = i;
-        t->strings[i].tuning = tuning[i];
+        t.strings[i].id = i;
+        t.strings[i].tuning = tuning[i];
     }
 
     return t;
 }
 
+
 /**
  * @brief This function correctly frees the tuning
  * @param s Tuning to be freed
  */
-void freeTuning(Tuning *t) {
-    free(t->strings);
-
-    free(t);
+void freeTuning(Tuning t) {
+    free(t.strings);
 }
 
 /**
@@ -47,6 +46,12 @@ ChordType createChordType(ChordKind kind, int intervalCount, int *intervals) {
     return type;
 }
 
+/**
+ * @brief This function creates a chord based on the `root` note and chord `kind`
+ * @example createChord(F, MAJ7) creates a Fmaj7 chord
+ * @param root Root note of the chord
+ * @param kind Chord kind
+ */
 Chord createChord(Tone root, ChordKind kind) {
     Chord chord;
     chord.kind = kind;

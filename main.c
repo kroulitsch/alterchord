@@ -3,8 +3,7 @@
 #include <stdlib.h>
 
 int main() {
-    Tone tones[6] = {F, A, G, C, G, E};
-    Tuning t = createTuning(6, tones);
+    Tuning t = createTuning(6, "FACGCE");
 
     for(int i = 0; i < t.stringCount; i++) {
         printf("%s ", toneToStr(t.strings[i].tuning));

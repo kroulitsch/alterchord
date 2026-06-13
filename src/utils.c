@@ -10,14 +10,29 @@ char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#",
  * @param tuning Tuning of each string
  * @returns Pointer to a created string
  */
-Tuning createTuning(int stringCount, Tone *tuning) {
+Tuning createTuning(int stringCount, char *tuning) {
     Tuning t;
     t.stringCount = stringCount;
     t.strings = malloc(stringCount * sizeof(String));
 
     for(int i = 0; i < stringCount; i++) {
         t.strings[i].id = i;
-        t.strings[i].tuning = tuning[i];
+    }
+
+    int index = 0;
+    for(char *c = tuning; c[0] != '\0' && index < stringCount; c++) {
+        char tone[3];
+        if(c[1] == '#' || c[1] == 'b') {
+            tone[0] = c[0];
+            tone[1] = c[1];
+            tone[2] = '\0';
+            c++;
+        } else {
+            tone[0] = c[0];
+            tone[1] = '\0';
+        }
+
+        t.strings[index++].tuning = strToTone(tone);
     }
 
     return t;
@@ -69,7 +84,7 @@ Chord createChord(Tone root, ChordKind kind) {
  */
 char *toneToStr(Tone t) {
     if(t == NO_TONE) {
-        return "NO NOTE";
+        return "NO TONE";
     }
     return toneNames[t];
 }
@@ -79,11 +94,16 @@ char *toneToStr(Tone t) {
  * @param str String to be converted
  */
 Tone strToTone(char *str) {
+    if(strcmp("NO TONE", str) == 0) {
+        return NO_TONE;
+    }
     for(int i = 0; i < TONES_COUNT; i++) {
         if(strcmp(toneNames[i], str) == 0) {
             return (Tone)i;
         } else if(str[1] == 'b' && toneNames[i][0] == str[0]) {
             return (Tone)((i - 1 + TONES_COUNT) % TONES_COUNT);
+        } else if(str[1] == '#' && toneNames[i][0] == str[0]) {
+            return (Tone)((i + 1) % TONES_COUNT);
         }
     }
 

@@ -13,27 +13,27 @@ char *chordKindNames[CHORD_KIND_SIZE] = {"(No chord kind)", "maj", "min", "dim",
 Tuning createTuning(int stringCount, char *tuning) {
     Tuning t;
     t.stringCount = stringCount;
-    t.strings = malloc(stringCount * sizeof(String));
+    t.strings = malloc(stringCount * sizeof(Tone));
 
     for(int i = 0; i < stringCount; i++) {
-        t.strings[i].id = i;
-        t.strings[i].tuning = NO_TONE;
+        t.strings[i] = NO_TONE;
     }
 
     int index = 0;
-    for(char *c = tuning; c[0] != '\0' && index < stringCount; c++) {
+    for(char *c = tuning; c[0] != '\0' && index < stringCount; ) {
         char tone[3];
         if(c[1] == '#' || c[1] == 'b') {
             tone[0] = c[0];
             tone[1] = c[1];
             tone[2] = '\0';
-            c++;
+            c += 2;
         } else {
             tone[0] = c[0];
             tone[1] = '\0';
+            c++;
         }
 
-        t.strings[index++].tuning = strToTone(tone);
+        t.strings[index++] = strToTone(tone);
     }
 
     generateBasics();
@@ -105,11 +105,11 @@ Chord createChord(char *name) {
     chord.root = strToTone(rootStr);
 
     chord.kind = strToChordKind(&(name[rootLen]));
-    chord.type = getChordType(chord.kind);
-    chord.tonesCount = chord.type.intervalCount;
+    ChordType type = getChordType(chord.kind);
+    chord.tonesCount = type.intervalCount;
 
     for(int i = 0; i < chord.tonesCount; i++) {
-        chord.tones[i] = (Tone)((chord.root + chord.type.intervals[i]) % TONES_COUNT);
+        chord.tones[i] = (Tone)((chord.root + type.intervals[i]) % TONES_COUNT);
     }
 
     return chord;

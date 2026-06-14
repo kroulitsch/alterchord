@@ -13,14 +13,9 @@ extern char *toneNames[TONES_COUNT];
 typedef enum {NO_CHORD_KIND, MAJ, MIN, DIM, AUG, MAJ7, MIN7, SUS2, SUS4, CHORD_KIND_SIZE} ChordKind;
 extern char *chordKindNames[CHORD_KIND_SIZE];
 
-typedef struct string_t {
-    int id;
-    Tone tuning;
-} String;
-
 typedef struct tuning_t {
     int stringCount;
-    String *strings;
+    Tone *strings;
     int fretCount;
 } Tuning;
 
@@ -33,7 +28,6 @@ typedef struct chord_type_t {
 typedef struct chord_t {
     Tone root;
     ChordKind kind;
-    ChordType type;
     int tonesCount;
     Tone tones[TONES_COUNT];
 } Chord;

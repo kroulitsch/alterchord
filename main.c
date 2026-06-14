@@ -5,7 +5,7 @@ int main() {
     Tuning t = createTuning(6, "FACGCE");
 
     for(int i = 0; i < t.stringCount; i++) {
-        printf("%s ", toneToStr(t.strings[i].tuning));
+        printf("%s ", toneToStr(t.strings[i]));
     }
     printf("\n");
 

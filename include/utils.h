@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TONES_COUNT 12
 #define MAX_FRET 30
+#define MUTED -1
 
-typedef enum {C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, NO_TONE} Tone;
+typedef enum {C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, TONES_COUNT, NO_TONE} Tone;
 extern char *toneNames[TONES_COUNT];
 
 typedef enum {NO_CHORD_KIND, MAJ, MIN, DIM, AUG, MAJ7, MIN7, SUS2, SUS4, CHORD_KIND_SIZE} ChordKind;
@@ -38,7 +38,7 @@ typedef struct shape_t {
     int *frets;
 } Shape;
 
-Tuning createTuning(int stringCount, char *tuning);
+Tuning createTuning(int stringCount, char *tuning, int fretCount);
 void freeTuning(Tuning t);
 
 ChordType createChordType(ChordKind kind, int intervalCount, int *intervals);

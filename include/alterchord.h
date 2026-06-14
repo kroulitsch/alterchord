@@ -4,6 +4,10 @@
 #include "utils.h"
 #include "basics.h"
 
-Shape getShape(Chord chord, Tuning tuning, int capo, int maxFret);
+#include <stdbool.h>
+
+bool isInChord(Tone base, int fret, Chord chord);
+int getSpan(int *frets, int currentFret, int capo);
+Shape getShape(Chord chord, Tuning tuning, int span, int capo, int maxFret);
 
 #endif

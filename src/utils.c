@@ -10,8 +10,9 @@ char *chordKindNames[CHORD_KIND_SIZE] = {"(No chord kind)", "maj", "min", "dim",
  * @param tuning Tuning of each string
  * @returns Created tuning
  */
-Tuning createTuning(int stringCount, char *tuning) {
+Tuning createTuning(int stringCount, char *tuning, int fretCount) {
     Tuning t;
+    t.fretCount = fretCount;
     t.stringCount = stringCount;
     t.strings = malloc(stringCount * sizeof(Tone));
 

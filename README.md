@@ -1,5 +1,5 @@
 # Alterchord
-Alterchord is a guitar chords' shapes generator library written in C.
+Alterchord is a guitar chords shapes generator library for alternative tunings written in C.
 
 It allows users to generate chord shapes based on given guitar specifications, such as a number of strings and their tuning (supports alternative tunings), capo position and maximum usable fret.
 

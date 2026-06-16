@@ -13,11 +13,13 @@ extern char *toneNames[TONES_COUNT];
 typedef enum {
     NO_CHORD_KIND,
     MAJ, MIN, DIM, AUG, // basic
-    DOM7, MAJ7, MIN7, MINMAJ7, M7B5, DIM7, MAJ6, MIN6, // six-seven
-    DOM9, MAJ9, MIN9, MINMAJ9, M7B5B9, DIM9, DOM7B9, DOM7SHARP9, // nine
+    DOM7, MAJ7, MIN7, MINMAJ7, M7B5, DIM7, MAJ6, MIN6,
+    DOM7SUS2, DOM7SUS4, MAJ7SUS2, MAJ7SUS4, MIN7SUS4, // six-seven
+    DOM9, MAJ9, MIN9, MINMAJ9, M7B5B9, DIM9, DOM7B9, DOM7SHARP9,
+    DOM9SUS4, MAJ9SUS4, MIN9SUS4, DOM7B9SUS4, // nine
     DOM11, MAJ11, MIN11, MAJ7_SHARP11, // eleven
     DOM13, MAJ13, MIN13, MINMAJ13, // thirteen
-    ADD9, MINADD9, // add chords
+    ADD9, MINADD9, ADD4, // add chords
     SUS2, SUS4, POWER, // special, power
     CHORD_KIND_SIZE
 } ChordKind;

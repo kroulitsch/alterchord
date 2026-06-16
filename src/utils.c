@@ -6,10 +6,12 @@ char *chordKindNames[CHORD_KIND_SIZE] = {
     "(No chord kind)",
     "", "min", "dim", "aug",                                        // basic
     "7", "maj7", "min7", "minmaj7", "m7b5", "dim7", "6", "min6",    // six-seven
+    "7sus2", "7sus4", "maj7sus2", "maj7sus4", "min7sus4",            
     "9", "maj9", "min9", "minmaj9", "m7b5b9", "dim9", "7b9", "7#9", // nine
+    "9sus4", "maj9sus4", "min9sus4", "7b9sus4",                      
     "11", "maj11", "min11", "maj7#11",                              // eleven
     "13", "maj13", "min13", "minmaj13",                             // thirteen
-    "add9", "minadd9",                                              // add chords
+    "add9", "minadd9", "add4",                                      // add chords
     "sus2", "sus4", "5"                                             // special, power
 };
 

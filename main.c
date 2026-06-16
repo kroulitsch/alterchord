@@ -9,11 +9,11 @@ int main() {
     }
     printf("\n");
 
-    Chord fmaj = createChord("A#5");
+    Chord fmaj = createChord("Gadd4");
     char buff[TONES_COUNT * 3];
     printf("%s\n", chordToStr(fmaj, buff));
 
-    Shape s = getShape(fmaj, t, 2, 0, t.fretCount);
+    Shape s = getShape(fmaj, t, 4, 0, t.fretCount);
     if(s.frets) {
         for(int i = 0; i < t.stringCount; i++) {
         printf("%d ", s.frets[i]);

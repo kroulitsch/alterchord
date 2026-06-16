@@ -232,3 +232,58 @@ Shape *getPrevShape(Shape *current) {
     if (!current || !current->prev) return NULL;
     return current->prev;
 }
+
+int analyzeShape(Shape shape, ChordKind *foundKinds, Tone *foundRoots, int maxResults) {
+    bool shapeTones[TONES_COUNT] = {false};
+    int uniqueShapeTonesCount = 0;
+    int matchCount = 0;
+
+    for (int s = 0; s < shape.tuning.stringCount; s++) {
+        if (shape.frets[s] == MUTED) continue;
+
+        Tone playingTone = (Tone)(((int)shape.tuning.strings[s] + shape.frets[s]) % TONES_COUNT);
+        if (!shapeTones[playingTone]) {
+            shapeTones[playingTone] = true;
+            uniqueShapeTonesCount++;
+        }
+    }
+
+    if (uniqueShapeTonesCount == 0) return 0;
+
+    for (int r = 0; r < TONES_COUNT; r++) {
+        Tone currentRoot = (Tone)r;
+
+        for (int k = 1; k < CHORD_KIND_SIZE; k++) {
+            ChordType type = getChordType((ChordKind)k);
+            if (type.kind == NO_CHORD_KIND) continue;
+
+            if (type.intervalCount != uniqueShapeTonesCount) continue;
+
+            bool testChordTones[TONES_COUNT] = {false};
+            for (int i = 0; i < type.intervalCount; i++) {
+                Tone t = (Tone)((currentRoot + type.intervals[i]) % TONES_COUNT);
+                testChordTones[t] = true;
+            }
+
+            bool isMatch = true;
+            for (int t = 0; t < TONES_COUNT; t++) {
+                if (shapeTones[t] != testChordTones[t]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+
+            if (isMatch) {
+                if (matchCount < maxResults) {
+                    foundKinds[matchCount] = type.kind;
+                    foundRoots[matchCount] = currentRoot;
+                    matchCount++;
+                } else {
+                    return matchCount;
+                }
+            }
+        }
+    }
+
+    return matchCount;
+}

@@ -15,6 +15,6 @@ Shape getShape(Chord chord, Tuning tuning, int span, int capo, int maxFret);
 Shape *getNextShape(Shape *current, int span, int capo, int maxFret);
 Shape *getPrevShape(Shape *current);
 
-int analyzeShape(Shape shape, ChordKind *foundKinds, Tone *foundRoots, int maxResults);
+int analyzeShape(Shape shape, Chord *foundChords, int maxResults);
 
 #endif

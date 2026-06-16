@@ -198,14 +198,14 @@ Tone strToTone(char *str) {
 }
 
 /**
- * @brief This function converts chord to a readable string into a provided buffer
+ * @brief This function converts chord tones to a readable string into a provided buffer
  * @param c Chord to be converted
  * @param buff Buffer to be used
  * @returns Buffer with the chord string
  */
-char *chordToStr(Chord c, char *buff) {
+void chordTonesToStr(Chord c, char *buff) {
     buff[0] = '\0';
-    if(c.tonesCount == 0) {
+    if(c.tonesCount == 0 || c.kind == NO_CHORD_KIND) {
         strcat(buff, "(No chord)");
     }
 
@@ -215,8 +215,22 @@ char *chordToStr(Chord c, char *buff) {
             strcat(buff, " ");
         }
     }
+}
 
-    return buff;
+/**
+ * @brief This function converts chord name to a readable string into a provided buffer
+ * @param c Chord to be converted
+ * @param buff Buffer to be used
+ * @returns Buffer with the chord string
+ */
+void chordNameToStr(Chord c, char *buff) {
+    buff[0] = '\0';
+    if(c.tonesCount == 0 || c.kind == NO_CHORD_KIND) {
+        strcat(buff, "(No chord)");
+    }
+
+    strcat(buff, toneToStr(c.root));
+    strcat(buff, chordKindNames[c.kind]);
 }
 
 /**

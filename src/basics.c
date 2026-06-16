@@ -2,6 +2,9 @@
 
 ChordType basics_arr[CHORD_KIND_SIZE];
 
+/**
+ * @brief This function generates all basic chord kinds into the basics_arr array
+ */
 void generateBasics() {
     // (No chord kind)
     basics_arr[NO_CHORD_KIND] = createChordType(NO_CHORD_KIND, 0, NULL);
@@ -64,6 +67,9 @@ void generateBasics() {
     basics_arr[POWER]    = createChordType(POWER,    2, (int[]){0, 7});
 }
 
+/**
+ * @brief This function returns the already generated basics_arr chords array
+ */
 ChordType *getBasics() {
     return basics_arr;
 }

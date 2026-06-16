@@ -42,10 +42,9 @@ int main() {
     clickedShape.tuning = myTuning;
     clickedShape.frets = (int[]){2, MUTED, 2, 4, 0, 0};
 
-    ChordKind foundKinds[MAX_RESULTS];
-    Tone foundRoots[MAX_RESULTS];
+    Chord foundChords[MAX_RESULTS];
 
-    int count = analyzeShape(clickedShape, foundKinds, foundRoots, MAX_RESULTS);
+    int count = analyzeShape(clickedShape, foundChords, MAX_RESULTS);
 
     printf("Shape analysis: 2 X 2 4 0 0 in tuning FACGCG\n");
     printf("Found options (%d):\n", count);
@@ -56,10 +55,10 @@ int main() {
     }
 
     for (int i = 0; i < count; i++) {
-        char *kindStr = chordKindNames[foundKinds[i]];
-        char *rootStr = toneToStr(foundRoots[i]);
+        char chordStr[MAX_RESULTS];
+        chordNameToStr(foundChords[i], chordStr);
 
-        printf("Option %d: %s%s\n", i + 1, rootStr, kindStr);
+        printf("Option %d: %s\n", i + 1, chordStr);
     }
     printf("----------------------------------------\n");
 

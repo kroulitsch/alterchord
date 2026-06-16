@@ -188,6 +188,14 @@ static bool getNextShapeRec(Tuning tuning, Chord chord, int span, int capo, int 
     return false;
 }
 
+/**
+ * @brief This function generates the next possible shape, based on the current shape
+ * @param current Current shape to be started at
+ * @param span Maximum distance between two pressed frets
+ * @param capo Number of the fret the capo is on (no capo = 0)
+ * @param maxFret Highest fret usable in the shape
+ * @returns Generated shape pointer
+ */
 Shape *getNextShape(Shape *current, int span, int capo, int maxFret) {
     if (!current || !current->frets) return NULL;
 
@@ -228,12 +236,22 @@ Shape *getNextShape(Shape *current, int span, int capo, int maxFret) {
     return NULL;
 }
 
+/**
+ * @brief This function returns the previously generated shape, based on the current shape
+ * @param current Current shape
+ * @returns Previous shape pointer
+ */
 Shape *getPrevShape(Shape *current) {
     if (!current || !current->prev) return NULL;
     return current->prev;
 }
 
-int analyzeShape(Shape shape, ChordKind *foundKinds, Tone *foundRoots, int maxResults) {
+/**
+ * @brief This function analyzes a given shape and returns all possible chords this shape represents
+ * @param shape Shape to be analyzed
+ * @param foundChords Chord buffer where the resulting chords are stored
+ */
+int analyzeShape(Shape shape, Chord *foundChords, int maxResults) {
     bool shapeTones[TONES_COUNT] = {false};
     int uniqueShapeTonesCount = 0;
     int matchCount = 0;
@@ -275,8 +293,14 @@ int analyzeShape(Shape shape, ChordKind *foundKinds, Tone *foundRoots, int maxRe
 
             if (isMatch) {
                 if (matchCount < maxResults) {
-                    foundKinds[matchCount] = type.kind;
-                    foundRoots[matchCount] = currentRoot;
+                    Chord c;
+                    c.kind = type.kind;
+                    c.root = currentRoot;
+                    c.tonesCount = type.intervalCount;
+                    for (int i = 0; i < type.intervalCount; i++) {
+                        c.tones[i] = (Tone)((currentRoot + type.intervals[i]) % TONES_COUNT);
+                    }
+                    foundChords[matchCount] = c;
                     matchCount++;
                 } else {
                     return matchCount;

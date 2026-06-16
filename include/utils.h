@@ -67,7 +67,8 @@ void freeShapesList(Shape *root);
 
 char *toneToStr(Tone t);
 Tone strToTone(char *str);
-char *chordToStr(Chord c, char *buff);
+void chordTonesToStr(Chord c, char *buff);
+void chordNameToStr(Chord c, char *buff);
 ChordKind strToChordKind(char *str);
 
 #endif

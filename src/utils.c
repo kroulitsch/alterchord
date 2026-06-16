@@ -2,7 +2,16 @@
 #include "basics.h"
 
 char *toneNames[TONES_COUNT] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-char *chordKindNames[CHORD_KIND_SIZE] = {"(No chord kind)", "maj", "min", "dim", "aug", "maj7", "min7", "sus2", "sus4", "power"};
+char *chordKindNames[CHORD_KIND_SIZE] = {
+    "(No chord kind)",
+    "", "min", "dim", "aug",                                        // basic
+    "7", "maj7", "min7", "minmaj7", "m7b5", "dim7", "6", "min6",    // six-seven
+    "9", "maj9", "min9", "minmaj9", "m7b5b9", "dim9", "7b9", "7#9", // nine
+    "11", "maj11", "min11", "maj7#11",                              // eleven
+    "13", "maj13", "min13", "minmaj13",                             // thirteen
+    "add9", "minadd9",                                              // add chords
+    "sus2", "sus4", "5"                                             // special, power
+};
 
 /**
  * @brief This function is used to create a `Tuning` with a given `stringCount` and `tuning`

@@ -9,7 +9,7 @@ int main() {
     }
     printf("\n");
 
-    Chord fmaj = createChord("A#power");
+    Chord fmaj = createChord("A#5");
     char buff[TONES_COUNT * 3];
     printf("%s\n", chordToStr(fmaj, buff));
 

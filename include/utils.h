@@ -10,7 +10,18 @@
 typedef enum {C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, TONES_COUNT, NO_TONE} Tone;
 extern char *toneNames[TONES_COUNT];
 
-typedef enum {NO_CHORD_KIND, MAJ, MIN, DIM, AUG, MAJ7, MIN7, SUS2, SUS4, POWER, CHORD_KIND_SIZE} ChordKind;
+typedef enum {
+    NO_CHORD_KIND,
+    MAJ, MIN, DIM, AUG, // basic
+    DOM7, MAJ7, MIN7, MINMAJ7, M7B5, DIM7, MAJ6, MIN6, // six-seven
+    DOM9, MAJ9, MIN9, MINMAJ9, M7B5B9, DIM9, DOM7B9, DOM7SHARP9, // nine
+    DOM11, MAJ11, MIN11, MAJ7_SHARP11, // eleven
+    DOM13, MAJ13, MIN13, MINMAJ13, // thirteen
+    ADD9, MINADD9, // add chords
+    SUS2, SUS4, POWER, // special, power
+    CHORD_KIND_SIZE
+} ChordKind;
+
 extern char *chordKindNames[CHORD_KIND_SIZE];
 
 typedef struct tuning_t {

@@ -134,6 +134,27 @@ void freeShape(Shape s) {
     free(s.frets);
 }
 
+void freeShapesList(Shape *root) {
+    if (!root) return;
+
+    while (root->prev != NULL) {
+        root = root->prev;
+    }
+
+    Shape *current = root;
+    while (current != NULL) {
+        Shape *nextToFree = current->next;
+        if (current->frets != NULL) {
+            free(current->frets);
+        }
+
+        if (current != root) {
+            free(current);
+        }
+        current = nextToFree;
+    }
+}
+
 /**
  * @brief This function converts `Tone` instance to a readable string
  * @param t Tone to be converted
@@ -155,13 +176,21 @@ Tone strToTone(char *str) {
     if(strcmp("(No tone)", str) == 0) {
         return NO_TONE;
     }
-    for(int i = 0; i < TONES_COUNT; i++) {
-        if(strcmp(toneNames[i], str) == 0) {
+    for (int i = 0; i < TONES_COUNT; i++) {
+        if (strcmp(toneNames[i], str) == 0) {
             return (Tone)i;
-        } else if(str[1] == 'b' && toneNames[i][0] == str[0]) {
-            return (Tone)((i - 1 + TONES_COUNT) % TONES_COUNT);
-        } else if(str[1] == '#' && toneNames[i][0] == str[0]) {
-            return (Tone)((i + 1) % TONES_COUNT);
+        }
+    }
+
+    if (str[1] != '\0') {
+        for (int i = 0; i < TONES_COUNT; i++) {
+            if (toneNames[i][0] == str[0] && toneNames[i][1] == '\0') {
+                if (str[1] == 'b') {
+                    return (Tone)((i - 1 + TONES_COUNT) % TONES_COUNT);
+                } else if (str[1] == '#') {
+                    return (Tone)((i + 1) % TONES_COUNT);
+                }
+            }
         }
     }
 

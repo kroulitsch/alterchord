@@ -74,10 +74,15 @@ static bool containsAllTones(Tuning tuning, Chord chord, int *frets) {
 
 static bool getShapeRec(Tuning tuning, Chord chord, int span, int capo, int maxFret, int currentString, Shape *s) {
     if (currentString == tuning.stringCount) {
-        return containsAllTones(tuning, chord, s->frets);; 
+        return containsAllTones(tuning, chord, s->frets); 
     }
 
     Tone base = tuning.strings[currentString];
+
+    s->frets[currentString] = MUTED;
+    if (getShapeRec(tuning, chord, span, capo, maxFret, currentString + 1, s)) {
+        return true;
+    }
 
     for (int f = capo; f <= maxFret && f <= tuning.fretCount; f++) {
         if (!isInChord(base, f, chord)) {
@@ -91,11 +96,6 @@ static bool getShapeRec(Tuning tuning, Chord chord, int span, int capo, int maxF
                 return true; 
             }
         }
-    }
-
-    s->frets[currentString] = MUTED;
-    if (getShapeRec(tuning, chord, span, capo, maxFret, currentString + 1, s)) {
-        return true;
     }
     
     return false;
@@ -118,6 +118,8 @@ Shape getShape(Chord chord, Tuning tuning, int span, int capo, int maxFret) {
     s.tuning = tuning;
     s.chord = chord;
     s.frets = malloc(tuning.stringCount * sizeof(int));
+    s.prev = NULL;
+    s.next = NULL;
 
     for (int i = 0; i < tuning.stringCount; i++) {
         s.frets[i] = MUTED;
@@ -131,4 +133,102 @@ Shape getShape(Chord chord, Tuning tuning, int span, int capo, int maxFret) {
     }
 
     return s;
+}
+
+static bool getNextShapeRec(Tuning tuning, Chord chord, int span, int capo, int maxFret, int currentString, int *originalFrets, Shape *s, bool *skipCurrent) {
+    if (currentString == tuning.stringCount) {
+        if (containsAllTones(tuning, chord, s->frets)) {
+            if (*skipCurrent) {
+                *skipCurrent = false;
+                return false; 
+            }
+            return true; 
+        }
+        return false;
+    }
+
+    int originalFret = originalFrets[currentString];
+    Tone base = tuning.strings[currentString];
+
+    if (!*skipCurrent || originalFret == MUTED) {
+        bool originalSkipState = *skipCurrent;
+        
+        s->frets[currentString] = MUTED;
+        
+        if (getNextShapeRec(tuning, chord, span, capo, maxFret, currentString + 1, originalFrets, s, skipCurrent)) {
+            return true;
+        }
+        
+        *skipCurrent = originalSkipState;
+    }
+
+    int startFret = (*skipCurrent && originalFret != MUTED) ? originalFret : capo;
+
+    for (int f = startFret; f <= maxFret && f <= tuning.fretCount; f++) {
+        if (!isInChord(base, f, chord)) {
+            continue;
+        }
+
+        bool originalSkipState = *skipCurrent;
+        if (*skipCurrent && f != originalFret) {
+            *skipCurrent = false;
+        }
+
+        s->frets[currentString] = f;
+
+        if (getSpan(s->frets, currentString, capo) <= span) {
+            if (getNextShapeRec(tuning, chord, span, capo, maxFret, currentString + 1, originalFrets, s, skipCurrent)) {
+                return true;
+            }
+        }
+
+        *skipCurrent = originalSkipState;
+    }
+
+    return false;
+}
+
+Shape *getNextShape(Shape *current, int span, int capo, int maxFret) {
+    if (!current || !current->frets) return NULL;
+
+    if (current->next != NULL) {
+        return current->next;
+    }
+
+    capo = capo <= current->tuning.fretCount ? capo : 0;
+    maxFret = maxFret <= current->tuning.fretCount ? maxFret : current->tuning.fretCount;
+
+    Shape *nextShape = malloc(sizeof(Shape));
+    if (!nextShape) return NULL;
+
+    nextShape->tuning = current->tuning;
+    nextShape->chord = current->chord;
+    nextShape->frets = malloc(current->tuning.stringCount * sizeof(int));
+    if (!nextShape->frets) {
+        free(nextShape);
+        return NULL;
+    }
+    nextShape->prev = current;
+    nextShape->next = NULL;
+
+    for (int i = 0; i < current->tuning.stringCount; i++) {
+        nextShape->frets[i] = MUTED;
+    }
+
+    bool skipCurrent = true;
+    bool found = getNextShapeRec(current->tuning, current->chord, span, capo, maxFret, 0, current->frets, nextShape, &skipCurrent);
+
+    if (found) {
+        current->next = nextShape;
+        return nextShape;
+    }
+
+    free(nextShape->frets);
+    free(nextShape);
+    return NULL;
+}
+
+Shape *getPrevShape(Shape *current) {
+    if (!current || !current->prev) return NULL;
+    return current->prev;
 }

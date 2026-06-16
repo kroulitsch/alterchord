@@ -2,26 +2,43 @@
 #include <stdio.h>
 
 int main() {
-    Tuning t = createTuning(6, "FACGCG", 24);
+    Tuning myTuning = createTuning(6, "FACGCG", 24);
 
-    for(int i = 0; i < t.stringCount; i++) {
-        printf("%s ", toneToStr(t.strings[i]));
-    }
-    printf("\n");
+    Chord myChord = createChord("Fmaj7sus4");
+    
+    printf("Looking for shapes for a chord Fmaj7sus4\n");
+    printf("--------------------------------------------------\n");
 
-    Chord fmaj = createChord("Gadd4");
-    char buff[TONES_COUNT * 3];
-    printf("%s\n", chordToStr(fmaj, buff));
-
-    Shape s = getShape(fmaj, t, 4, 0, t.fretCount);
-    if(s.frets) {
-        for(int i = 0; i < t.stringCount; i++) {
-        printf("%d ", s.frets[i]);
-    }
-    printf("\n");
+    Shape s = getShape(myChord, myTuning, 2, 0, 12);
+    
+    if (s.frets == NULL) {
+        printf("No shape for this chord found.\n");
+        return 0;
     }
 
-    freeShape(s);
-    freeTuning(t);
+    Shape *current = &s;
+    int counter = 1;
+
+    while (current != NULL) {
+        printf("Shape %02d: ", counter++);
+        
+        for (int i = 0; i < current->tuning.stringCount; i++) {
+            if (current->frets[i] == MUTED) {
+                printf("X ");
+            } else {
+                printf("%d ", current->frets[i]);
+            }
+        }
+        printf("\n");
+
+        current = getNextShape(current, 2, 0, 12);
+    }
+
+    printf("--------------------------------------------------\n");
+    printf("All possible combinations printed out.\n");
+
+    // 6. Úklid paměti
+    freeShapesList(&s);
+    freeTuning(myTuning);
     return 0;
 }

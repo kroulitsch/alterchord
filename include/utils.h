@@ -45,10 +45,14 @@ typedef struct chord_t {
     Tone tones[TONES_COUNT];
 } Chord;
 
+struct shape_t;
+
 typedef struct shape_t {
     Tuning tuning;
     Chord chord;
     int *frets;
+    struct shape_t *prev;
+    struct shape_t *next;
 } Shape;
 
 Tuning createTuning(int stringCount, char *tuning, int fretCount);
@@ -59,6 +63,7 @@ ChordType getChordType(ChordKind kind);
 Chord createChord(char *name);
 
 void freeShape(Shape s);
+void freeShapesList(Shape *root);
 
 char *toneToStr(Tone t);
 Tone strToTone(char *str);
